@@ -1,0 +1,74 @@
+%Adapted by RedWarbler from invoice.tex by mkropat under MIT license
+\documentclass[]{calc-invoice}
+%\documentclass[letterpaper,currency=dollar]{calc-invoice}
+%\documentclass[letterpaper,currency=euro]{calc-invoice}
+%\documentclass[letterpaper,currency=pound]{calc-invoice}
+\defaultfontfeatures{ Path = ./Fonts/ }
+\usepackage{fontawesome}
+\usepackage{geometry}
+\geometry{letterpaper,
+	left=15mm,
+	right=15mm,
+	top=30mm,}
+
+\newcommand{\invoiceNo}{01}
+\newcommand{\duein}{15}% days
+\newcommand{\gendate}{\today}
+\newcommand{\me}{Jack Handyman}
+\newcommand{\mybusiness}{Your Business}
+\newcommand{\clientName}{Your Client}
+\newcommand{\paid}{200}
+\newcommand{\balance}{250}%This must be manually filled; final balance calculations happen after each of the \hours(np) and \expense(np) are called. 
+
+\definecolor{highlightColor}{rgb}{0.,0.5,0.30}% Client, projects, table headings, etc.
+\definecolor{subduedColor}{rgb}{0.45,0.45,0.45}% Dates under invoice # and payable balance
+
+\setmetadata{\me}{Metadata Me}{\invoiceNo}{\clientName}
+
+\begin{document}
+\newfontface\mainLightItalic{OpenSans-LightItalic}
+\makeheader{\mybusiness}{\invoiceNo}
+
+%%%%CLIENT INFORMATION%%%%
+\twocolumnlayout{\begin{infoSection}
+\infoBox{Client}{\clientName 
+	\\123 Main Street
+	\\ Queens, NY 10101}%
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+\infoBox{Project(s)}{AAAA; BBBB; CCCC}
+\infoBox{Contact}{Jill Contact}
+\infoSub{\faMobilePhone}{\small\slshape	+1~(555)~666-7777}
+\infoSub{\tiny\faEnvelope}{\small\slshape\emaillink{jill@example.com}}
+\noalign{\addvspace{8ex}}
+\infoBox{}{{\large\raisebox{.55\height}\currencysym\huge\formatcurrency{\balance} \arrowbase}\\
+{\small\color{subduedColor}%
+	due \duedate{\duein}}}
+    \end{infoSection}}%
+%%%%MY INFORMATION%%%%%%
+{\begin{infoSection}
+\infoBox{\arrowtarget Payable To}{\me
+	\\456 Secondary Ave
+	\\Brooklyn, NY 12121}%
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+\infoSub{\faMobilePhone}{\small\slshape +1~(555)~888-9999}
+\infoSub{\tiny\faEnvelope}{\small\slshape \emaillink{jack@example.com}}
+    \end{infoSection}}
+\drawarrow
+
+%Two line commands:
+% \hoursnp - {date}{hours}{rate}{\item description}
+% \expensenp - {date}{amount}{\item description}
+\begin{hoursItemization}
+	\hoursnp{3/10/2018}{10}{20}{\item Line item without project header
+	\item A nested item}
+
+	\hoursnp{3/17/2018}{10}{20}{\item Some things that you did}
+	
+	\expensenp{3/20/2018}{50}{\item Expense without project}
+		
+\beginsummary
+\summaryline{Total}{\currencysym\formatcurrency{\InvoiceTotal}}
+\summaryline{Paid}{\currencysym\formatcurrency{\paid}}
+\finalsummary{Balance Due}{\currencysym \formatcurrency{\FinalBalance}}
+\end{hoursItemization}
+\end{document}
